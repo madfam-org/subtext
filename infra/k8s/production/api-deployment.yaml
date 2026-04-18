@@ -50,6 +50,8 @@ spec:
               memory: 2Gi
           securityContext:
             allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
             capabilities:
               drop: [ALL]
             readOnlyRootFilesystem: false
