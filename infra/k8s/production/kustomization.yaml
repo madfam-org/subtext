@@ -4,12 +4,12 @@ kind: Kustomization
 namespace: subtext
 
 resources:
-  - namespace.yaml
-  - api-deployment.yaml
-  - api-service.yaml
-  - network-policies.yaml
+- namespace.yaml
+- api-deployment.yaml
+- api-service.yaml
+- network-policies.yaml
 
 images:
-  - name: ghcr.io/madfam-org/subtext-api
-    newName: ghcr.io/madfam-org/subtext-api
-    newTag: latest
+- digest: sha256:001f17fa751dfacea6faec67f510f24df6dc8f066c0daa93e336c8772d4a7cf5
+  name: ghcr.io/madfam-org/subtext-api
+  newName: ghcr.io/madfam-org/subtext-api
