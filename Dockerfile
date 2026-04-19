@@ -61,6 +61,9 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # in the builder stage already wired everything up; this is just the
 # in-repo view for debugging + for packages that resolve via importlib.
 COPY src/ ./src/
+# Landing page assets (HTML + favicon). Resolved at runtime via
+# Path(__file__).resolve().parents[3] / "landing" from src/subtext/api/app.py.
+COPY landing/ ./landing/
 
 # Non-root for prod.
 RUN useradd --create-home --shell /bin/bash --uid 1001 appuser && \
