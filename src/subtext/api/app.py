@@ -5,17 +5,23 @@ Main application factory and configuration.
 """
 
 from contextlib import asynccontextmanager
+from pathlib import Path
 from typing import AsyncGenerator
 
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import ORJSONResponse
+from fastapi.responses import FileResponse, ORJSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from subtext import __version__
 from subtext.config import settings
 
 from .routes import auth, billing, health, realtime, sessions, signals, webhooks
+
+# Landing page assets (index.html, favicon.svg). Served at / and /static/*.
+# Baked into the container via Dockerfile `COPY landing/ /app/landing/`.
+_LANDING_DIR = Path(__file__).resolve().parents[3] / "landing"
 
 logger = structlog.get_logger()
 
@@ -122,11 +128,38 @@ def create_app() -> FastAPI:
     # ──────────────────────────────────────────────────────────
 
     # Health checks (no auth required)
-    # Root — service metadata (no auth). Avoids a bare 404 on the
-    # landing URL; humans hitting https://subtext.live/ expect to see
-    # *something* identifying the service.
-    @app.get("/", include_in_schema=False)
-    async def root() -> dict:
+    # Landing page — static HTML marketing site. Humans hitting
+    # https://subtext.live/ get a proper landing. Machines that want
+    # structured metadata can hit /info for the JSON shape that used
+    # to live at /.
+    _index_path = _LANDING_DIR / "index.html"
+    _has_landing = _index_path.exists()
+
+    if _has_landing:
+        # Static assets (favicon, any future images/css splits).
+        app.mount(
+            "/static",
+            StaticFiles(directory=str(_LANDING_DIR)),
+            name="static",
+        )
+
+        @app.get("/", include_in_schema=False)
+        async def landing():
+            return FileResponse(str(_index_path), media_type="text/html")
+    else:
+        # Fallback for dev envs where landing/ isn't present.
+        @app.get("/", include_in_schema=False)
+        async def landing_fallback() -> dict:
+            return {
+                "service": "subtext",
+                "version": __version__,
+                "description": "Conversational Intelligence Infrastructure",
+                "health": "/health",
+                "api": f"/api/{settings.api_version}",
+            }
+
+    @app.get("/info", include_in_schema=False)
+    async def service_info() -> dict:
         return {
             "service": "subtext",
             "version": __version__,
