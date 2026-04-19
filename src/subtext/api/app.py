@@ -122,6 +122,20 @@ def create_app() -> FastAPI:
     # ──────────────────────────────────────────────────────────
 
     # Health checks (no auth required)
+    # Root — service metadata (no auth). Avoids a bare 404 on the
+    # landing URL; humans hitting https://subtext.live/ expect to see
+    # *something* identifying the service.
+    @app.get("/", include_in_schema=False)
+    async def root() -> dict:
+        return {
+            "service": "subtext",
+            "version": __version__,
+            "description": "Conversational Intelligence Infrastructure",
+            "health": "/health",
+            "api": f"/api/{settings.api_version}",
+            "docs": "/docs" if settings.debug else None,
+        }
+
     app.include_router(
         health.router,
         tags=["Health"],
