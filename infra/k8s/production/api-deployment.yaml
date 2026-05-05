@@ -7,7 +7,7 @@ metadata:
     app: subtext-api
     app.kubernetes.io/name: subtext-api
     app.kubernetes.io/component: backend
-    app.kubernetes.io/part-of: madfam-platform
+    app.kubernetes.io/part-of: subtext
 spec:
   replicas: 1
   selector:
@@ -18,7 +18,7 @@ spec:
       labels:
         app: subtext-api
         app.kubernetes.io/name: subtext-api
-        app.kubernetes.io/part-of: madfam-platform
+        app.kubernetes.io/part-of: subtext
     spec:
       securityContext:
         runAsNonRoot: true
