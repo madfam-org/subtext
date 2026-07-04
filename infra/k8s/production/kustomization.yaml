@@ -10,6 +10,6 @@ resources:
 - network-policies.yaml
 
 images:
-- digest: sha256:8fe905b59acf48aa5b7ada9348ee60eec19cfab6266f3529c534246681864eee
+- digest: sha256:88af34ad29cb7ac7b74991011680ed2dc2386cc6ecb3680be622760cf4a6c970
   name: ghcr.io/madfam-org/subtext-api
   newName: ghcr.io/madfam-org/subtext-api
