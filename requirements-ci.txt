@@ -1,0 +1,71 @@
+# CI test dependencies for subtext.
+#
+# This is the non-ML subset of the runtime dependencies from pyproject.toml,
+# plus the test tooling from the [dev] extra. The heavy ML stack (torch,
+# whisperx, funasr, pyannote, speechbrain, deepfilternet, ...) is deliberately
+# excluded: the source lazily imports those packages precisely so the test
+# suite can run without them (see src/subtext/pipeline/stages.py,
+# "Lazy import torch to allow testing without ML dependencies").
+#
+# Install for tests:
+#   uv pip install -r requirements-ci.txt
+#   uv pip install --no-deps -e .
+#   pytest tests/
+#
+# Verified locally 2026-07-04: 699 passed, 3 skipped.
+
+# Web framework.
+# fastapi is pinned below 0.116 (starlette < 1.0): the route-registration
+# tests in tests/unit/test_api_app.py and tests/unit/test_routes.py iterate
+# app.routes expecting starlette Route objects with a .path attribute;
+# starlette >= 1.x wraps included routers in _IncludedRouter objects without
+# .path, which breaks those tests. Unpin once the tests are updated.
+fastapi>=0.109.0,<0.116
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+websockets>=12.0
+
+# Database / queue
+sqlalchemy[asyncio]>=2.0.25
+asyncpg>=0.29.0
+alembic>=1.13.0
+redis>=5.0.0
+arq>=0.26.0
+
+# Audio I/O (light; needed by tests/unit/test_pipeline_stages.py)
+librosa>=0.10.1
+soundfile>=0.12.1
+
+# LLM integrations
+openai>=1.10.0
+anthropic>=0.18.0
+ollama>=0.1.6
+
+# Auth
+httpx>=0.26.0
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+pyjwt>=2.8.0  # tests/conftest.py mock_janua_token uses `import jwt`
+
+# Billing / email
+stripe>=8.0.0
+resend>=0.7.0
+
+# CLI
+click>=8.1.0
+rich>=13.0.0
+
+# Utilities
+pydantic[email]>=2.5.0
+pydantic-settings>=2.1.0
+structlog>=24.1.0
+python-dotenv>=1.0.0
+boto3>=1.34.0
+tenacity>=8.2.0
+orjson>=3.9.0
+numpy>=1.26.0
+
+# Test tooling (from the [dev] extra)
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
