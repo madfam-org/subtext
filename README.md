@@ -163,7 +163,9 @@ OPENAI_API_KEY=sk_...
 
 ## License
 
-AGPL-3.0 - See [LICENSE](./LICENSE) for details.
+AGPL-3.0-only - See [LICENSE](./LICENSE) for details.
+
+Copyright (c) 2026 Innovaciones MADFAM SAS de C.V.
 
 ## Contributing
 

@@ -3,7 +3,7 @@ name = "subtext"
 version = "0.1.0"
 description = "Metacognitive Engine - Read the room, not just the transcript"
 readme = "README.md"
-license = { text = "AGPL-3.0" }
+license = { text = "AGPL-3.0-only" }
 requires-python = ">=3.11"
 authors = [
     { name = "MADFAM", email = "dev@madfam.io" }
