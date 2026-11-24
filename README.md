@@ -52,14 +52,14 @@ uvicorn subtext.api:app --reload
 ### Using Enclii (Recommended)
 
 ```bash
-# Initialize with Enclii
+# Initialize with Enclii (writes service.yaml)
 enclii init
 
-# Deploy to development
-enclii up
+# Deploy to development (dev is the default environment)
+enclii deploy
 
 # Deploy to production
-enclii deploy
+enclii deploy --env production
 ```
 
 ## Architecture
